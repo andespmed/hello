@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Andrea Espinal</title>
+<style>
+  :root {
+    --text: #3d2b1f;
+    --muted: #5a4434;
+    --accent: #8a3f1c;
+    --gold: #f3cf8e;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #d9c3a2;
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ---------- Painted golden sky ---------- */
+  .sky {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(60% 45% at 80% 35%, #f6dcae 0%, rgba(246, 220, 174, 0) 70%),
+      radial-gradient(70% 50% at 60% 72%, #e8b672 0%, rgba(232, 182, 114, 0) 75%),
+      linear-gradient(165deg, #bdb7b0 0%, #d9c3a2 35%, #e6bf86 60%, #a89f8e 100%);
+  }
+  .layer {
+    position: absolute;
+    left: -12%;
+    top: -12%;
+    width: 124%;
+    height: 124%;
+    will-change: transform;
+    animation: drift 70s ease-in-out infinite alternate;
+  }
+  /* big golden cloud banks, strongest on the right */
+  .l-gold {
+    opacity: 0.85;
+    -webkit-mask-image: radial-gradient(ellipse at 70% 42%, #000 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.12) 92%);
+            mask-image: radial-gradient(ellipse at 70% 42%, #000 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.12) 92%);
+  }
+  /* creamy highlights */
+  .l-cream {
+    opacity: 0.6;
+    animation-duration: 90s;
+    animation-direction: alternate-reverse;
+    -webkit-mask-image: radial-gradient(ellipse at 78% 35%, #000 0%, rgba(0, 0, 0, 0.5) 55%, rgba(0, 0, 0, 0.1) 95%);
+            mask-image: radial-gradient(ellipse at 78% 35%, #000 0%, rgba(0, 0, 0, 0.5) 55%, rgba(0, 0, 0, 0.1) 95%);
+  }
+  /* soft grey-blue shadows at the top-left and the bottom */
+  .l-shade {
+    opacity: 0.55;
+    animation-duration: 110s;
+    -webkit-mask-image:
+      radial-gradient(ellipse at 8% 8%, #000 0%, rgba(0, 0, 0, 0) 55%),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 62%, #000 100%);
+            mask-image:
+      radial-gradient(ellipse at 8% 8%, #000 0%, rgba(0, 0, 0, 0) 55%),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 62%, #000 100%);
+  }
+  .hill {
+    position: absolute;
+    left: -10%;
+    bottom: -6%;
+    width: 60%;
+    height: 24%;
+    background: radial-gradient(ellipse at 0% 100%, rgba(214, 176, 112, 0.8), rgba(214, 176, 112, 0) 70%);
+  }
+  /* soft veil so the text stays easy to read */
+  .veil {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 40% 50%, rgba(255, 241, 218, 0.38), rgba(255, 241, 218, 0) 62%);
+  }
+  .grain {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.14;
+    mix-blend-mode: multiply;
+  }
+  @keyframes drift {
+    from { transform: translate3d(-3%, -1%, 0) scale(1); }
+    to   { transform: translate3d(3%, 2%, 0) scale(1.06); }
+  }
+
+  /* ---------- Content ---------- */
+  main {
+    position: relative;
+    z-index: 1;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.25rem;
+    max-width: 36rem;
+    margin: 0 auto;
+    padding: calc(2rem + env(safe-area-inset-top, 0px)) 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
+    text-shadow: 0 0 18px rgba(255, 238, 205, 0.55);
+  }
+  .date {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1 {
+    font-size: clamp(2.5rem, 12vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+  .role {
+    font-size: 1.05rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  hr {
+    border: 0;
+    height: 2px;
+    width: 3.5rem;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #fff3d6, rgba(255, 243, 214, 0));
+  }
+  .problem {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 30rem;
+  }
+
+  /* ---------- Shooting-star cursor ---------- */
+  #star {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    html.star-cursor, html.star-cursor * { cursor: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .layer { animation: none; }
+    #star { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="sky" aria-hidden="true">
+    <svg class="layer l-gold" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <filter id="fGold" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.0032 0.0055" numOctaves="4" seed="11"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 0.74  0 0 0 0 0.4  2.8 0 0 0 -1.05"/>
+        <feGaussianBlur stdDeviation="4"/>
+      </filter>
+      <rect width="1000" height="1000" filter="url(#fGold)"/>
+    </svg>
+
+    <svg class="layer l-cream" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <filter id="fCream" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.006 0.011" numOctaves="4" seed="42"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 0.94  0 0 0 0 0.82  2.6 0 0 0 -1.0"/>
+        <feGaussianBlur stdDeviation="3"/>
+      </filter>
+      <rect width="1000" height="1000" filter="url(#fCream)"/>
+    </svg>
+
+    <svg class="layer l-shade" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <filter id="fShade" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.004 0.007" numOctaves="4" seed="5"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.62  0 0 0 0 0.6  0 0 0 0 0.58  2.6 0 0 0 -0.9"/>
+        <feGaussianBlur stdDeviation="4"/>
+      </filter>
+      <rect width="1000" height="1000" filter="url(#fShade)"/>
+    </svg>
+
+    <div class="hill"></div>
+    <div class="veil"></div>
+
+    <svg class="grain" preserveAspectRatio="none">
+      <filter id="fGrain" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="3"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.28  0 0 0 1.2 -0.3"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#fGrain)"/>
+    </svg>
+  </div>
+
+  <main>
+    <p class="date" id="date"></p>
+    <h1>Andrea Espinal</h1>
+    <p class="role">MSc student, National College of Ireland</p>
+    <hr>
+    <p class="problem">I’m interested in how small businesses can use their everyday data to make better decisions without needing a team of analysts.</p>
+  </main>
+
+  <canvas id="star" aria-hidden="true"></canvas>
+
+  <script>
+    // Today's date
+    (function () {
+      var el = document.getElementById("date");
+      var now = new Date();
+      el.textContent = now.toLocaleDateString("en-IE", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+      el.setAttribute("datetime", now.toISOString().slice(0, 10));
+    })();
+
+    // Shooting-star cursor
+    (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      var canvas = document.getElementById("star");
+      var ctx = canvas.getContext("2d");
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var TRAIL_LIFE = 650;   // ms a trail point lasts
+      var DUST_LIFE = 900;    // ms a sparkle lasts
+      var trail = [];
+      var dust = [];
+      var head = { x: 0, y: 0, visible: false };
+
+      document.documentElement.classList.add("star-cursor");
+
+      function resize() {
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      function move(e) {
+        var now = performance.now();
+        head.x = e.clientX;
+        head.y = e.clientY;
+        head.visible = true;
+        trail.push({ x: e.clientX, y: e.clientY, t: now });
+        if (Math.random() < 0.4) {
+          dust.push({
+            x: e.clientX + (Math.random() - 0.5) * 8,
+            y: e.clientY + (Math.random() - 0.5) * 8,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: Math.random() * 0.5 + 0.1,
+            r: Math.random() * 1.6 + 0.6,
+            t: now
+          });
+        }
+      }
+      window.addEventListener("pointermove", move, { passive: true });
+      window.addEventListener("pointerdown", move, { passive: true });
+      window.addEventListener("pointerup", function (e) {
+        if (e.pointerType !== "mouse") head.visible = false;
+      }, { passive: true });
+      document.documentElement.addEventListener("mouseleave", function () { head.visible = false; });
+
+      function sparkle(x, y, size, rot) {
+        ctx.beginPath();
+        for (var i = 0; i < 8; i++) {
+          var r = i % 2 === 0 ? size : size * 0.32;
+          var a = rot + (i * Math.PI) / 4;
+          var px = x + Math.cos(a) * r;
+          var py = y + Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+      }
+
+      function frame(now) {
+        ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+        while (trail.length && now - trail[0].t > TRAIL_LIFE) trail.shift();
+        dust = dust.filter(function (d) { return now - d.t < DUST_LIFE; });
+
+        // sparkle dust
+        for (var d = 0; d < dust.length; d++) {
+          var p = dust[d];
+          var life = 1 - (now - p.t) / DUST_LIFE;
+          p.x += p.vx;
+          p.y += p.vy;
+          ctx.fillStyle = "rgba(255, 250, 235, " + (life * 0.9).toFixed(3) + ")";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r * life + 0.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // tapered glowing tail
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        for (var i = 1; i < trail.length; i++) {
+          var a = trail[i - 1], b = trail[i];
+          var k = 1 - (now - b.t) / TRAIL_LIFE;
+          if (k <= 0) continue;
+          ctx.shadowColor = "rgba(255, 165, 60, " + k.toFixed(3) + ")";
+          ctx.shadowBlur = 14;
+          ctx.strokeStyle = "rgba(255, 205, 120, " + (k * 0.9).toFixed(3) + ")";
+          ctx.lineWidth = 0.6 + 5 * k;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "rgba(255, 255, 250, " + (k * 0.95).toFixed(3) + ")";
+          ctx.lineWidth = 0.5 + 2.4 * k;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+
+        // star head
+        if (head.visible) {
+          var glow = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 24);
+          glow.addColorStop(0, "rgba(255, 252, 240, 0.98)");
+          glow.addColorStop(0.35, "rgba(255, 215, 130, 0.5)");
+          glow.addColorStop(1, "rgba(255, 215, 130, 0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(head.x, head.y, 24, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.shadowColor = "rgba(255, 165, 60, 0.95)";
+          ctx.shadowBlur = 10;
+          ctx.fillStyle = "#fffdf6";
+          sparkle(head.x, head.y, 9, now / 1400);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>
